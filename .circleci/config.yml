@@ -788,30 +788,30 @@ jobs:
       - checkout
       - setup_docker_signing
       - setup_aws
-      - run:
-          name: pull pre images (or build if not pullable) and push release docker images
-          command: |
-            set -x
-            BRANCH=${CIRCLE_BRANCH}
-            docker/build_push.sh -u -b ${BRANCH} -n client
-            docker/build_push.sh -u -b ${BRANCH} -n init
-            docker/build_push.sh -u -b ${BRANCH} -n faucet
-            docker/build_push.sh -u -b ${BRANCH} -n tools
-            docker/build_push.sh -u -b ${BRANCH} -n validator
-            docker/build_push.sh -u -b ${BRANCH} -n validator-tcb
-            docker/build_push.sh -u -b ${BRANCH} -n cluster-test
+      #- run:
+      #    name: pull pre images (or build if not pullable) and push release docker images
+      #    command: |
+      #      set -x
+      #      BRANCH=${CIRCLE_BRANCH}
+      #      docker/build_push.sh -u -b ${BRANCH} -n client
+      #      docker/build_push.sh -u -b ${BRANCH} -n init
+      #      docker/build_push.sh -u -b ${BRANCH} -n faucet
+      #      docker/build_push.sh -u -b ${BRANCH} -n tools
+      #      docker/build_push.sh -u -b ${BRANCH} -n validator
+      #      docker/build_push.sh -u -b ${BRANCH} -n validator-tcb
+      #      docker/build_push.sh -u -b ${BRANCH} -n cluster-test
       - run:
           name: docker image pruning.
           command: |
-            scripts/dockerhub_prune.sh -u "${DOCKERHUB_USERNAME}"" -p ${DOCKERHUB_PASSWORD}" -x
-      - run:
-          name: push to novi ecr
-          command: |
-            #push to novi ecr with standard names
-            GIT_REV=$(git rev-parse --short=8 HEAD)
-            aws ecr get-login-password --region ${AWS_REGION} | \
-            docker login --username AWS --password-stdin "${AWS_ECR_ACCOUNT_URL}"
-            docker/dockerhub_to_novi_ecr.sh -t ${BRANCH}_${GIT_REV} -r ${AWS_ECR_ACCOUNT_URL}
+            scripts/dockerhub_prune.sh -u "${DOCKERHUB_USERNAME}" -p "${DOCKERHUB_PASSWORD}" -x
+      #- run:
+      #    name: push to novi ecr
+      #    command: |
+      #      #push to novi ecr with standard names
+      #      GIT_REV=$(git rev-parse --short=8 HEAD)
+      #      aws ecr get-login-password --region ${AWS_REGION} | \
+      #      docker login --username AWS --password-stdin "${AWS_ECR_ACCOUNT_URL}"
+      #      docker/dockerhub_to_novi_ecr.sh -t ${BRANCH}_${GIT_REV} -r ${AWS_ECR_ACCOUNT_URL}
 
   ######################################################################################################################
   #  Code Coverage for unit tests (targets S3 html upload, codecov.io output, and slack with failed tests/compilations)
