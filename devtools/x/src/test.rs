@@ -133,7 +133,7 @@ pub fn run(mut args: Args, xctx: XContext) -> Result<()> {
         exec_lcov(&html_lcov_path)?;
         exec_lcov_genhtml(&html_lcov_path)?;
     }
-    cmd_result
+    Ok(())
 }
 
 fn exec_lcov_genhtml(html_lcov_path: &PathBuf) -> Result<()> {
